@@ -89,9 +89,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
         <AppLogo />
         <NuxtLink to="/perfil">
           <button class="btn btn-ghost flex items-center pl-2">
-            <div class="mr-2">
-              <UserPreview />
-            </div>
+            <UserPreview class="mr-2" />
             <div>
               <p class="font-bold">User Name</p>
               <p class="text-xs">user@email.com</p>
