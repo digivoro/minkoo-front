@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1>Mercados</h1>
+    <PageTitle> Mercados </PageTitle>
   </div>
 </template>
