@@ -14,13 +14,9 @@
     >
       <ClientOnly>
         <li>
-          <a class="justify-between">
-            Profile
-            <span class="badge">New</span>
-          </a>
+          <NuxtLink to="/perfil" class="justify-between"> Perfil </NuxtLink>
         </li>
-        <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
+        <li><a>Salir</a></li>
       </ClientOnly>
     </ul>
   </div>
