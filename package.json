@@ -12,6 +12,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.6.1",
     "nuxt": "^3.13.2",
+    "nuxt-app": "file:",
     "vue": "latest",
     "vue-router": "latest"
   },
