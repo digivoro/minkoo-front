@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useCommunitiesStore } from "~/store/communities";
+import { useCommunityStore } from "~/store/communities";
 
-const communitiesStore = useCommunitiesStore();
-const { communities } = storeToRefs(communitiesStore);
+const communityStore = useCommunityStore();
+const { communities } = storeToRefs(communityStore);
 
 const isPending = ref(true);
 const error = ref("");
 
 onMounted(async () => {
   try {
-    await communitiesStore.getCommunities();
+    await communityStore.getCommunities();
   } catch (err) {
     error.value = "Hubo un error al cargar las comunidades";
     console.error(error);
@@ -38,11 +38,14 @@ onMounted(async () => {
       v-else-if="communities.length"
       class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
     >
-      <CommunityCard
+      <NuxtLink
         v-for="community in communities"
         :key="community.id"
-        :community="community"
-      />
+        :to="`/comunidad/${community.id}`"
+        class="transition-all hover:scale-105 hover:cursor-pointer"
+      >
+        <CommunityCard :community="community" />
+      </NuxtLink>
     </div>
 
     <!-- Empty -->
