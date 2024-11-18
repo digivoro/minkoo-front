@@ -1,16 +1,14 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/store/auth";
+
+const authStore = useAuthStore();
+
 const navItems = [
   {
     name: "home",
     text: "Inicio",
     link: "/",
     displays: ["drawer"],
-  },
-  {
-    name: "markets",
-    text: "Mercados",
-    link: "/mercados",
-    displays: ["navbar", "drawer"],
   },
   {
     name: "communities",
@@ -69,7 +67,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
                 {{ item.text }}
               </NuxtLink>
             </li>
-            <span class="ml-2">
+            <span v-if="authStore.currentUser" class="ml-2">
               <UserPreview />
             </span>
           </ul>
