@@ -10,4 +10,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    public: {
+      apiUrl: "",
+      defaultProfilePicture: "",
+    },
+  },
 });
