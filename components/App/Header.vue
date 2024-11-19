@@ -33,7 +33,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
     <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <!-- Navbar -->
-      <div class="navbar w-full bg-base-300">
+      <div class="navbar w-full bg-primary">
         <!-- Mobile -->
         <div class="flex-none lg:hidden">
           <label
@@ -65,7 +65,10 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
           <ul class="menu menu-horizontal items-center gap-2">
             <!-- Navbar menu content here -->
             <li v-for="(item, i) in navbarItems" :key="i">
-              <NuxtLink :to="item.link" class="btn btn-ghost btn-sm">
+              <NuxtLink
+                :to="item.link"
+                class="btn btn-ghost btn-sm text-primary-content"
+              >
                 {{ item.text }}
               </NuxtLink>
             </li>
@@ -73,7 +76,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
             <NuxtLink
               v-else
               to="/ingresar"
-              class="btn btn-outline btn-accent btn-sm"
+              class="btn btn-outline btn-accent btn-sm text-accent"
             >
               Ingresar
             </NuxtLink>

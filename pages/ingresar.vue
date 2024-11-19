@@ -33,7 +33,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="-mt-8 flex h-full items-center justify-center">
     <div class="card max-w-96 bg-accent shadow-lg">
       <div class="card-body">
         <div class="card-title">

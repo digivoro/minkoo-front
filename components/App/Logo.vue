@@ -1,3 +1,3 @@
 <template>
-  <div class="text-xl font-bold">Minkoo</div>
+  <div class="text-xl font-bold text-primary-content">Minkoo</div>
 </template>
