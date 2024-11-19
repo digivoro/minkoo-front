@@ -1,3 +1,3 @@
 <template>
-  <NuxtLink to="/" class="btn btn-ghost text-xl font-bold">Minkoo</NuxtLink>
+  <div class="text-xl font-bold">Minkoo</div>
 </template>
