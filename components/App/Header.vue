@@ -57,19 +57,26 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
           </label>
         </div>
         <!-- Mobile+LG -->
-        <div class="mx-2 flex-1 px-2"><AppLogo /></div>
+        <div class="mx-2 flex-1 px-2">
+          <NuxtLink to="/"><AppLogo /></NuxtLink>
+        </div>
         <!-- LG -->
         <div class="hidden flex-none lg:block">
-          <ul class="menu menu-horizontal items-center">
+          <ul class="menu menu-horizontal items-center gap-2">
             <!-- Navbar menu content here -->
             <li v-for="(item, i) in navbarItems" :key="i">
-              <NuxtLink :to="item.link">
+              <NuxtLink :to="item.link" class="btn btn-ghost btn-sm">
                 {{ item.text }}
               </NuxtLink>
             </li>
-            <span v-if="authStore.currentUser" class="ml-2">
-              <UserPreview />
-            </span>
+            <UserPreview v-if="authStore.currentUser" />
+            <NuxtLink
+              v-else
+              to="/ingresar"
+              class="btn btn-outline btn-accent btn-sm"
+            >
+              Ingresar
+            </NuxtLink>
           </ul>
         </div>
       </div>
