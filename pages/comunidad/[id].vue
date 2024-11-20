@@ -1,16 +1,45 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/store/auth";
 import { useCommunityStore } from "~/store/communities";
+import { useUserStore } from "~/store/users";
 
 definePageMeta({
   layout: "community",
 });
 
 const route = useRoute();
+const userStore = useUserStore();
+const authStore = useAuthStore();
 const communityStore = useCommunityStore();
 const { community } = storeToRefs(communityStore);
 
 const isPending = ref(true);
 const error = ref<string | null>(null);
+
+async function onJoinCommunity() {
+  try {
+    error.value = null;
+    if (!authStore.currentUser) {
+      throw new Error("Usuario no autenticado");
+    }
+    if (!community.value?.id) {
+      throw new Error("Identificación de comunidad inválida");
+    }
+    const response = await userStore.joinCommunity(
+      authStore.currentUser?.id,
+      community.value?.id,
+    );
+    if (!response.success) {
+      throw new Error("No logramos unirte a la comunidad. Intenta más tarde");
+    }
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error.value = err.message;
+      return;
+    }
+    error.value = String(err);
+  }
+}
 
 onMounted(async () => {
   try {
@@ -34,8 +63,17 @@ onMounted(async () => {
 
   <!-- Error -->
   <template v-else-if="error">
-    <PageTitle>Oops</PageTitle>
-    <p>Se produjo un error al cargar la comunidad</p>
+    <div class="mt-12 flex min-h-screen flex-col items-center">
+      <div class="card bg-error">
+        <div class="card-body">
+          <PageTitle>¡Oops!</PageTitle>
+          <p>{{ error }}</p>
+          <NuxtLink to="/" class="btn btn-outline btn-neutral">
+            Volver al inicio
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
   </template>
 
   <!-- Display -->
@@ -46,7 +84,7 @@ onMounted(async () => {
         class="hero-overlay bg-gradient-to-r from-black via-transparent opacity-70"
       ></figure>
 
-      <div class="absolute left-0 top-0 w-full pl-4 pt-4">
+      <div class="absolute left-0 top-0 w-full pl-6 pt-4">
         <div class="text-xs font-bold text-neutral-content">COMUNIDAD</div>
         <p class="mb-8 text-4xl text-neutral-content">
           {{ community.name }}
@@ -55,10 +93,10 @@ onMounted(async () => {
     </div>
 
     <!-- Content -->
-    <div class="grid grid-cols-3 px-4">
+    <div class="grid grid-cols-3 px-6">
       <div class="card bg-neutral shadow-lg">
         <div class="card-body text-neutral-content">
-          <p class="card-title text-sm">Información</p>
+          <p class="card-title text-xs uppercase">Información</p>
           <p>
             {{ community.description }}
           </p>
@@ -69,8 +107,9 @@ onMounted(async () => {
                 <IconLockOpen class="mr-2 size-4" />
                 <p class="font-semibold">Comunidad abierta</p>
               </div>
-              <button class="btn btn-primary btn-sm">
-                <IconUserGroup class="size-4" /> Unirte
+              <button class="btn btn-primary btn-sm" @click="onJoinCommunity">
+                <IconUserGroup class="size-4" />
+                <span>Unirte</span>
               </button>
             </div>
           </div>

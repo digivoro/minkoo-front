@@ -1,5 +1,5 @@
 export interface Community {
-  id: string;
+  id: number;
   name: string;
   description?: string;
   createdAt?: string;
@@ -7,7 +7,7 @@ export interface Community {
 }
 
 export interface User {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
