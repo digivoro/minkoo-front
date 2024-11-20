@@ -1,13 +1,14 @@
 import type { Community } from "~/types";
 
 export const useCommunityStore = defineStore("community", () => {
-  const API_URL = "http://localhost:3001/communities";
+  const config = useRuntimeConfig();
+  const API_URL = config.public.apiUrl;
   const communities = ref<Community[]>([]);
   const community = ref<Community | null>(null);
 
   async function getCommunities() {
     try {
-      const response: Community[] = await $fetch(API_URL, {
+      const response: Community[] = await $fetch(API_URL + "/communities", {
         method: "GET",
       });
       communities.value = response;
@@ -19,7 +20,7 @@ export const useCommunityStore = defineStore("community", () => {
 
   async function getCommunity(id: number) {
     try {
-      const response: Community = await $fetch(API_URL + "/" + id, {
+      const response: Community = await $fetch(API_URL + "/communities/" + id, {
         method: "GET",
       });
       community.value = response;
