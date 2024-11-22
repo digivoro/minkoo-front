@@ -3,7 +3,7 @@ import { useAuthStore } from "~/store/auth";
 export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
 
-  if (!authStore.currentUser && to.meta.requiresAuth) {
+  if (to.meta.requiresAuth && !authStore.currentUser) {
     return navigateTo("/ingresar");
   }
 });
