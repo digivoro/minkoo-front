@@ -24,8 +24,8 @@ const navItems = [
   },
 ];
 
-const navbarItems = navItems.filter((i) => i.displays.includes("navbar"));
-const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
+const getNavItems = (section: "navbar" | "drawer") =>
+  navItems.filter((i) => i.displays.includes(section));
 </script>
 
 <template>
@@ -64,7 +64,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
         <div class="hidden flex-none lg:block">
           <ul class="menu menu-horizontal items-center gap-2">
             <!-- Navbar menu content here -->
-            <li v-for="(item, i) in navbarItems" :key="i">
+            <li v-for="(item, i) in getNavItems('navbar')" :key="i">
               <NuxtLink
                 :to="item.link"
                 class="btn btn-ghost btn-sm text-primary-content"
@@ -76,7 +76,7 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
             <NuxtLink
               v-else
               to="/ingresar"
-              class="btn btn-outline btn-accent btn-sm text-accent"
+              class="btn btn-outline btn-secondary btn-sm text-secondary"
             >
               Ingresar
             </NuxtLink>
@@ -96,20 +96,20 @@ const drawerItems = navItems.filter((i) => i.displays.includes("drawer"));
       ></label>
 
       <ul class="menu min-h-full w-80 bg-base-200 p-4">
-        <AppLogo />
-        <NuxtLink to="/perfil">
-          <button class="btn btn-ghost flex items-center pl-2">
-            <UserPreview class="mr-2" />
-            <div>
-              <p class="font-bold">User Name</p>
-              <p class="text-xs">user@email.com</p>
-            </div>
-          </button>
+        <AppLogo class="mb-4" />
+        <NuxtLink to="/perfil" class="btn btn-ghost">
+          <UserPreview class="mr-2" />
+          <div>
+            <p class="font-bold">User Name</p>
+            <p class="text-xs">user@email.com</p>
+          </div>
         </NuxtLink>
         <div class="divider"></div>
         <!-- Sidebar content here -->
-        <li v-for="(item, i) in navItems" :key="i">
-          <NuxtLink :to="item.link">{{ item.text }}</NuxtLink>
+        <li v-for="(item, i) in getNavItems('drawer')" :key="i">
+          <NuxtLink :to="item.link" class="font-bold">
+            {{ item.text }}
+          </NuxtLink>
         </li>
       </ul>
     </div>
