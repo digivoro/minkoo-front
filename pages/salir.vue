@@ -5,6 +5,8 @@ const authStore = useAuthStore();
 
 onMounted(async () => {
   await authStore.logout();
-  navigateTo("/ingresar");
+  navigateTo("/");
 });
 </script>
+
+<template></template>
