@@ -5,6 +5,7 @@ import { useUserStore } from "~/store/users";
 
 definePageMeta({
   layout: "community",
+  requiresAuth: true,
 });
 
 const route = useRoute();
@@ -15,6 +16,12 @@ const { community } = storeToRefs(communityStore);
 
 const isPending = ref(true);
 const error = ref<string | null>(null);
+
+const userJoinedCommunity = computed(() =>
+  userStore.joinedCommunities.find(
+    (c) => community.value?.id === c.communityId,
+  ),
+);
 
 async function onJoinCommunity() {
   try {
@@ -36,6 +43,10 @@ async function onJoinCommunity() {
     }
     error.value = String(err);
   }
+}
+
+async function onLeaveCommunity() {
+  console.log("Leaving!");
 }
 
 onMounted(async () => {
@@ -104,7 +115,20 @@ onMounted(async () => {
                 <IconLockOpen class="mr-2 size-4" />
                 <p class="font-semibold">Comunidad abierta</p>
               </div>
-              <button class="btn btn-primary btn-sm" @click="onJoinCommunity">
+
+              <button
+                v-if="userJoinedCommunity"
+                class="btn btn-primary btn-sm"
+                @click="onLeaveCommunity"
+              >
+                <IconExit class="size-4" />
+                <span>Abandonar</span>
+              </button>
+              <button
+                v-else
+                class="btn btn-primary btn-sm"
+                @click="onJoinCommunity"
+              >
                 <IconUserGroup class="size-4" />
                 <span>Unirte</span>
               </button>

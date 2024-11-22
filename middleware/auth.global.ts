@@ -4,6 +4,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.currentUser) {
-    return navigateTo("/ingresar");
+    return navigateTo(`/ingresar?redirect=${to.path}`);
   }
 });
