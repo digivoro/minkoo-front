@@ -1,10 +1,18 @@
 import type { LoginResponse, User } from "~/types";
+import { useUserStore } from "./users";
 
 export const useAuthStore = defineStore("auth", () => {
   const config = useRuntimeConfig();
   const API_URL = config.public.apiUrl;
   const currentUser = ref<User | null>(null);
   const token = ref<string | null>(null);
+
+  const authHeader = computed<string>(() => {
+    if (!token.value) {
+      return "";
+    }
+    return "Bearer " + token.value;
+  });
 
   async function login(email: string, password: string) {
     try {
@@ -22,14 +30,13 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error("No hubo respuesta.");
       }
       setToken(response.access_token);
-      await fetchUser();
+      await fetchCurrentUser();
 
       return {
         success: true,
       };
     } catch (err) {
       console.error("Login error:", err);
-
       return {
         success: false,
         error:
@@ -60,32 +67,41 @@ export const useAuthStore = defineStore("auth", () => {
     if (storedToken) {
       try {
         const tokenData = JSON.parse(storedToken);
-        if (tokenData.expires > new Date().getTime()) {
-          token.value = tokenData.value;
-          await fetchUser();
-        } else {
-          clearAuth();
+        if (tokenData.expires <= new Date().getTime()) {
+          return clearAuth();
         }
-      } catch (error) {
-        console.error("Token parsing error:", error);
-        clearAuth();
+        await fetchCurrentUser();
+
+        if (!currentUser.value) {
+          return;
+        }
+      } catch (err) {
+        console.error("Token parsing error:", err);
       }
     }
   }
 
-  async function fetchUser() {
+  async function fetchCurrentUser() {
     if (!token.value) return;
 
     try {
+      // Get User
       const response = await $fetch<User>(API_URL + "/users/profile", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token.value}`,
+          Authorization: authHeader.value,
         },
       });
+      if (!response) {
+        throw new Error("No se pudo recuperar el usuario");
+      }
       currentUser.value = response;
-    } catch (error) {
-      console.error("Fetch user error:", error);
+
+      // Get joined communities
+      const userStore = useUserStore();
+      await userStore.fetchJoinedCommunities();
+    } catch (err) {
+      console.error("Fetch user error:", err);
       clearAuth();
     }
   }
@@ -111,5 +127,6 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     logout,
     initializeAuth,
+    authHeader,
   };
 });

@@ -20,3 +20,9 @@ export interface LoginResponse {
   access_token: string | null;
   user: User | null;
 }
+
+export interface JoinedCommunities {
+  communityId: number;
+  roleId: number;
+  joinedAt: Date;
+}

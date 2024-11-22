@@ -25,10 +25,7 @@ async function onJoinCommunity() {
     if (!community.value?.id) {
       throw new Error("Identificación de comunidad inválida");
     }
-    const response = await userStore.joinCommunity(
-      authStore.currentUser?.id,
-      community.value?.id,
-    );
+    const response = await userStore.joinCommunity(community.value?.id);
     if (!response.success) {
       throw new Error("No logramos unirte a la comunidad. Intenta más tarde");
     }
