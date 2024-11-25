@@ -10,7 +10,7 @@ const config = useRuntimeConfig();
     <div tabindex="0" role="button" class="avatar btn btn-circle btn-ghost">
       <div class="w-10 rounded-full">
         <img
-          alt="Tailwind CSS Navbar component"
+          alt="Profile picture"
           :src="
             authStore.currentUser?.profilePic ||
             config.public.defaultProfilePicture
