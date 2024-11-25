@@ -8,6 +8,7 @@ definePageMeta({
   requiresAuth: true,
 });
 
+const config = useRuntimeConfig();
 const route = useRoute();
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -17,11 +18,21 @@ const { community } = storeToRefs(communityStore);
 const isPending = ref(true);
 const error = ref<string | null>(null);
 
-const userJoinedCommunity = computed(() =>
+const userIsMember = computed(() =>
   userStore.joinedCommunities.find(
     (c) => community.value?.id === c.communityId,
   ),
 );
+const totalMembersText = computed(() => {
+  const membersCount = community.value?.members.total;
+  return `${membersCount} miembro${membersCount != 1 ? "s" : ""}`;
+});
+
+// Tabs
+const activeTab = ref(0);
+function setActiveTab(tabIndex: number) {
+  activeTab.value = tabIndex;
+}
 
 async function onJoinCommunity() {
   try {
@@ -101,23 +112,22 @@ onMounted(async () => {
     </div>
 
     <!-- Content -->
-    <div class="grid grid-cols-3 px-6">
+    <div class="grid grid-cols-3 items-start gap-4 px-6">
+      <!-- Info card -->
       <div class="card bg-neutral shadow-lg">
         <div class="card-body text-neutral-content">
           <p class="card-title text-xs uppercase">Información</p>
           <p>
             {{ community.description }}
           </p>
+
           <div class="divider divider-secondary"></div>
           <div class="card-actions">
-            <div class="flex w-full justify-between">
-              <div class="flex items-center">
-                <IconLockOpen class="mr-2 size-4" />
-                <p class="font-semibold">Comunidad abierta</p>
-              </div>
+            <!-- Join/leave -->
 
+            <div class="flex">
               <button
-                v-if="userJoinedCommunity"
+                v-if="userIsMember"
                 class="btn btn-primary btn-sm"
                 @click="onLeaveCommunity"
               >
@@ -133,6 +143,97 @@ onMounted(async () => {
                 <span>Unirte</span>
               </button>
             </div>
+            <div class="flex w-full justify-between">
+              <div class="flex items-center">
+                <IconLockOpen class="mr-2 size-4" />
+                <p class="font-semibold">Comunidad abierta</p>
+              </div>
+            </div>
+
+            <!-- Members preview -->
+            <div class="flex w-full">
+              <div
+                class="avatar"
+                v-for="member in community.members.featured"
+                :key="member.userId"
+              >
+                <div class="size-6 rounded-full">
+                  <img
+                    alt="Member profile picture"
+                    :src="
+                      member.user.profilePic ||
+                      config.public.defaultProfilePicture
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Members Count -->
+            <div class="flex w-full">
+              <p class="text-xs font-semibold">
+                {{ totalMembersText }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="col-span-2">
+        <div role="tablist" class="tabs tabs-lifted">
+          <!-- Tab: Principal -->
+          <input
+            type="radio"
+            name="community_tabs"
+            role="tab"
+            class="tab text-xs font-bold uppercase"
+            :class="{
+              'underline decoration-primary decoration-[1.5px] underline-offset-8':
+                activeTab === 0,
+            }"
+            :checked="activeTab === 0"
+            aria-label="Principal"
+            @click="setActiveTab(0)"
+          />
+          <div role="tabpanel" class="tab-content border-base-300 px-4 py-10">
+            CONTENIDO PRINCIPAL
+          </div>
+
+          <!-- Tab: Miembros -->
+          <input
+            type="radio"
+            name="community_tabs"
+            role="tab"
+            class="tab text-xs font-bold uppercase"
+            :class="{
+              'underline decoration-primary decoration-[1.5px] underline-offset-8':
+                activeTab === 1,
+            }"
+            :checked="activeTab === 1"
+            aria-label="Miembros"
+            @click="setActiveTab(1)"
+          />
+          <div role="tabpanel" class="tab-content border-base-300 px-4 py-10">
+            CONTENIDO MIEMBROS
+          </div>
+
+          <!-- Tab: Mercado -->
+          <input
+            type="radio"
+            name="community_tabs"
+            role="tab"
+            class="tab text-xs font-bold uppercase"
+            :class="{
+              'underline decoration-primary decoration-[1.5px] underline-offset-8':
+                activeTab === 2,
+            }"
+            :checked="activeTab === 2"
+            aria-label="Mercado"
+            @click="setActiveTab(2)"
+          />
+          <div role="tabpanel" class="tab-content border-base-300 px-4 py-10">
+            CONTENIDO MERCADO
           </div>
         </div>
       </div>
