@@ -20,7 +20,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="px-4 pt-4">
     <PageTitle class="mb-8">Comunidades</PageTitle>
 
     <!-- Loading -->
